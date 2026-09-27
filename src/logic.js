@@ -69,7 +69,12 @@ export async function generate(modelId, interests) {
       { role: "user", content: `Interests: ${interests}` },
     ],
     stream: true,
-    completionOpts: { temperature: 0.8, maxTokens: 60 },
+    // Lower than the original 0.8: at higher temperature the model tends to
+    // pad the list with an emoji for an interest not actually mentioned
+    // (e.g. a camera for "hiking, coffee, reading" with no photography
+    // stated). Emoji-to-interest correctness can't be fully validated
+    // deterministically, so reducing randomness is the practical mitigation.
+    completionOpts: { temperature: 0.5, maxTokens: 60 },
   });
 
   let text = "";
