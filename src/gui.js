@@ -48,6 +48,11 @@ async function main() {
           res.end(JSON.stringify({ error: "Please enter a few interests or hobbies first" }));
           return;
         }
+        if (interests.trim().length > 150) {
+          res.writeHead(400, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Interests list is too long (max 150 characters)" }));
+          return;
+        }
         const result = await generate(modelId, interests.trim());
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify(result));
